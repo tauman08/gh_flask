@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "project-flask"
+version = "0.1.0"
+description = "'Timofeev Aleksandr'"
+authors = ["a.timofeev <tauman08@gmail.com>"]
+readme = "README.md"
+packages = [{include = "project_flask"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+flask = "^2.2.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
