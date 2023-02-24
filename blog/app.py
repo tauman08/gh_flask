@@ -10,13 +10,12 @@ def index(search: str):
     name = request.args.get('search',None)
     if request.method == 'GET':
         return f'Hello, {search}'
-    elif request.method == 'POST'
+    elif request.method == 'POST':
         return 'POST'
 
 
 @app.before_request
 def process_before_request():
-
     g.start_time = time()
 
 
@@ -25,7 +24,6 @@ def process_after_request(responce):
 
     if hasattr(g,"start_time"):
         responce.headers["process-time"] = time() - g.start_time
-
     return responce
 
 
