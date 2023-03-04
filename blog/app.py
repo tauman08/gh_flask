@@ -1,33 +1,15 @@
+from flask import Flask
+from blog.report.views import report
+from blog.user.views import user
+from blog.articles.views import article
 
-from datetime import time
-from flask import Flask, g
-from flask import request
+def create_app() -> Flask:
+    app = Flask(__name__)
+    register_blueprints(app)
 
-app = Flask(__name__)
+    return app
 
-@app.route('/<string:search>', methods=['GET','POST'])
-def index(search: str):
-    name = request.args.get('search',None)
-    if request.method == 'GET':
-        return f'Hello, {search}'
-    elif request.method == 'POST':
-        return 'POST'
-
-
-@app.before_request
-def process_before_request():
-    g.start_time = time()
-
-
-@app.after_request
-def process_after_request(responce):
-
-    if hasattr(g,"start_time"):
-        responce.headers["process-time"] = time() - g.start_time
-    return responce
-
-
-@app.errorhandler(404)
-def handler_404(error):
-    app.logger.error(error)
-    return '404'
+def register_blueprints(app: Flask):
+    app.register_blueprint(user)
+    app.register_blueprint(report)
+    app.register_blueprint(article)
