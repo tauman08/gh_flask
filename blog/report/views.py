@@ -1,7 +1,31 @@
-from flask import Blueprint
+from flask import Blueprint, render_template, redirect
 
-user = Blueprint('user', __name__, url_prefix='users', static_folder='../static' )
+report = Blueprint('report', __name__, url_prefix='/reports', static_folder='../static')
 
-@user.route('/')
-def user_list():
-    return 'Hello'
+REPORTS = {
+    1: 'Base report',
+    2: 'Report for marketplace',
+    3:  'Report for CRM',
+}
+
+@report.route('/')
+def report_list():
+    return render_template(
+        'reports/list.html',
+        reports=REPORTS,
+    )
+
+@report.route('/<int:pk>')
+def get_report(pk: int):
+    try:
+        report_name = REPORTS[pk]
+    except KeyError:
+        # raise NotFound(f'Report id {pk} not found')
+        return redirect(
+            '/reports/'
+        )
+
+    return  render_template(
+        'reports/details.html',
+        report_name = report_name,
+    )

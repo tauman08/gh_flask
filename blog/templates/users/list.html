@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ super() }}
+    Users list
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col">
+            <h1>Users : </h1>
+                 <ol>
+                    {% for user_id in users %}
+                       <!-- <li >{{ users[user_id] }}</li> -->
+                     <li ><a href="{{url_for('user.get_user',pk=user_id)}}">{{ users[user_id] }}</li>
+                    {% endfor %}
+                 </ol>
+        </div>
+    </div>
+{% endblock %}
