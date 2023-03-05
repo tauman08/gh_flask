@@ -9,6 +9,9 @@ packages = [{include = "project_flask"}]
 [tool.poetry.dependencies]
 python = "^3.7"
 flask = "^2.2.3"
+sqlalchemy = "^2.0.4"
+flask-sqlalchemy = "^3.0.3"
+flask-login = "^0.6.2"
 
 
 [tool.poetry.group.dev.dependencies]

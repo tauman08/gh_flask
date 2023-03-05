@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, redirect
+from flask_login import login_required
 
 article = Blueprint('article', __name__, url_prefix='/articles', static_folder='../static')
 
+from blog.models import User
 
 ARTICLES = {
     1: {'name':'Премия дарвина','user_id':1,'text':"""Турист из Тулы насмерть замерз на Эльбрусе. Об этом сообщает Telegram-канал 112.
@@ -29,9 +31,15 @@ def article_list():
     )
 
 @article.route('/<int:pk>')
+@login_required
 def get_article(pk: int):
     try:
         article_object = ARTICLES[pk]
+        user_row = User.query.filter_by(id=article_object['user_id']).one_or_none()
+        if user_row != None:
+            name_user = user_row.email
+        else:
+            name_user = 'None'
     except KeyError:
         # raise NotFound(f'Article id {pk} not found')
         return redirect(
@@ -41,4 +49,5 @@ def get_article(pk: int):
     return  render_template(
         'articles/details.html',
         article_object = article_object,
+        name_user = name_user
     )
