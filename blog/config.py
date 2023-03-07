@@ -1,4 +1,4 @@
-class Config:
+class BaseConfig:
     DEBUG = False
     DATABASE_URI = ''
     SECRET_KEY = '_5#y2L"F4Q8zFGFGDScvvx54687'
@@ -7,6 +7,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     
-class Development(Config):
+class Development(BaseConfig):
     DEBUG = True
 
+
+class TestingConfig(BaseConfig):
+    pass
+
+
+class ProductionConfig(BaseConfig):
+    pass

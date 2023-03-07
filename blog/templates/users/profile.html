@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ super() }}
-    User detail
+    User profile
 {% endblock %}
 
 {% block body %}
-    <h1>User: {{ user_name }}</h1>
-
+    <h1>{{ user.email }}</h1>
 {% endblock %}

@@ -1,11 +1,9 @@
 from flask import Blueprint, render_template, redirect
 from flask_login import login_required
-# from werkzeug.exceptions import NotFound
-
-user = Blueprint('user', __name__, url_prefix='/users', static_folder='../static')
-
+from werkzeug.exceptions import NotFound
 from blog.models import User
 
+user = Blueprint('user', __name__, url_prefix='/users', static_folder='../static')
 
 @user.route('/')
 def user_list():
@@ -19,21 +17,11 @@ def user_list():
 @user.route('/<int:pk>')
 @login_required
 def profile(pk: int):
+    selected_user = User.query.filter_by(id=pk).one_or_none()
+    if not selected_user:
+        raise NotFound(f"User #{pk} doesn't exist!")
 
-    try:
-        user_row = User.query.filter_by(id=pk).one_or_none()
-        if user_row != None:
-            user_name =  user_row.email
-        else:
-            user_name = 'None'
-
-    except KeyError:
-        # raise NotFound(f'User id {pk} not found')
-        return redirect(
-            '/users/'
-        )
-
-    return  render_template(
+    return render_template(
         'users/profile.html',
-        user_name = user_name,
+        user=selected_user,
     )
