@@ -8,7 +8,7 @@ from blog.config import Development
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    app.config.from_object(Development)
+    #app.config.from_object(Development)
 
     register_extensions(app)
     register_blueprints(app)
