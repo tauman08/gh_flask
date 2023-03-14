@@ -2,11 +2,12 @@ from flask_login import UserMixin
 from blog.app import db
 from werkzeug.security import check_password_hash
 
-class User(db.Model,UserMixin):
+
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(255), unique = True)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     password = db.Column(db.String(255))
