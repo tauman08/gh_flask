@@ -16,11 +16,3 @@ def create_init_user():
         db.session.commit()
 
 
-#@click.command('init-db')
-# def init_db():
-#     from wsgi import app
-
-#     # import models for creating tables
-#     from blog.models import User
-
-#     db.create_all(app=app)
