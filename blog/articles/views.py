@@ -1,53 +1,72 @@
-from flask import Blueprint, render_template, redirect
-from flask_login import login_required
+from flask import Blueprint, render_template, redirect, request, url_for
+from flask_login import login_required, current_user
+from blog.models import Article, Author
+from blog.forms.article import CreateArticleForm
+from blog.extensions import db
 
 article = Blueprint('article', __name__, url_prefix='/articles', static_folder='../static')
 
-from blog.models import User
 
-ARTICLES = {
-    1: {'name':'Премия дарвина','user_id':1,'text':"""Турист из Тулы насмерть замерз на Эльбрусе. Об этом сообщает Telegram-канал 112.
-    Отмечается, что 37-летний Сергей Гавриков решил подняться на вершину в кроссовках. На кадрах видно, что мужчина не взял с собой
-    никакого снаряжения — у него был только рюкзак.
-    По словам супруги, 27 февраля мужчина должен был вернуться домой, однако по непонятным причинам сдал билеты.
-    После Гавриков перестал выходить на связь. 3 марта тело пропавшего россиянина обнаружили спасатели на высоте 5 тысяч метров.
-    25 февраля альпинист из Читы скончался во время восхождения на Эльбрус. Предположительная причина смерти — сердечный приступ.
-    Отмечается, что группа состояла из пяти человек."""},
-    2: {'name':'Литералы строк','user_id':2,'text':""" Работа со строками в Python очень удобна. Существует несколько 
-        литералов строк, которые мы сейчас и рассмотрим.
-            Строки в апострофах и в кавычках
-            S = 'spam"s'
-            S = "spam's"
-        Строки в апострофах и в кавычках - одно и то же. Причина наличия двух вариантов в том, 
-        чтобы позволить вставлять в литералы строк символы кавычек или апострофов, не используя экранирование."""},
-    3: {'name':'State_3','user_id':3,'text':'skjldfhds hsjddfdksljfh sdkjfhsdkljfkl jslkdjfh lkjhlksjdhf slkdjfh'},
-}
 
-@article.route('/')
+
+
+@article.route('/', methods=['GET'])
 def article_list():
+    articles = Article.query.all()
     return render_template(
         'articles/list.html',
-        articles=ARTICLES,
+        articles=articles,
     )
 
-@article.route('/<int:pk>')
+
+# @article.route('/create', methods=['GET'])
+# @login_required
+# def create_article_form():
+#     form = CreateArticleForm(request.form)
+#     return render_template('articles/create.html',form=form)
+
+
+@article.route('/create', methods=['POST','GET'])
 @login_required
+def create_article():
+    
+    form = CreateArticleForm(request.form)
+    if request.method == "POST" and form.validate_on_submit():
+        _article = Article(title=form.title.data.strip(),text=form.text.data)
+        if current_user.author:
+            _article.author_id = current_user.author.id
+        else:
+            author = Author(user_id=current_user.id)
+            db.session.add(author)
+            db.session.flush()
+            _article.author_id = author.id
+
+        db.session.add(_article)
+        db.session.commit()
+
+        return redirect(url_for('article.get_article',pk =_article.id))
+    return render_template('articles/create.html',form=form)
+    
+
+@article.route('/<int:pk>')
 def get_article(pk: int):
     try:
-        article_object = ARTICLES[pk]
-        user_row = User.query.filter_by(id=article_object['user_id']).one_or_none()
-        if user_row != None:
-            name_user = user_row.email
+        selected_artical = Article.query.filter_by(id=pk).one_or_none()
+        if not selected_artical:
+            raise NotFound(f"Article #{pk} doesn't exist!")
+
+        author_row = Author.query.filter_by(id=selected_artical.author_id).one_or_none()
+        if author_row != None:
+            name_user =f'{ author_row.user.first_name} { author_row.user.last_name}'
         else:
             name_user = 'None'
     except KeyError:
-        # raise NotFound(f'Article id {pk} not found')
-        return redirect(
+         return redirect(
             '/articles/'
         )
 
     return  render_template(
         'articles/details.html',
-        article_object = article_object,
+        article_object = selected_artical,
         name_user = name_user
     )
