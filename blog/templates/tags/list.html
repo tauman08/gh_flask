@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Tags list
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col">
+            <h1>Tags : </h1>
+
+                    {% for tag in tags %}
+                        <div class="col-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <a href="{{url_for('tag.tag_details',pk=tag.id)}}">
+                                        <span class="badge text-bg-primary">{{ tag.name }}</span>
+                                    </a>
+                                    <div class="card-footer">
+                                        <small class="text-muted">Articles</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+        </div>
+    </div>
+{% endblock %}

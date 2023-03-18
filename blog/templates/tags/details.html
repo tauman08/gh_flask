@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ tag.name }}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <h1>Тег: {{ tag.name }}</h1>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h3> Articles: </h3>
+            <ol>
+                {% for article in tag.articles %}
+                    <li><div><small class="text-muted">{{ article.title }}</small></div></li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+{% endblock %}
+
