@@ -37,16 +37,18 @@ def register_blueprints(app: Flask):
     from blog.report.views import report
     from blog.articles.views import article
     from blog.author.views import author
+    from blog.tags.views import tag
 
     app.register_blueprint(user)
     app.register_blueprint(auth)
     app.register_blueprint(report)
     app.register_blueprint(article)
     app.register_blueprint(author)
-
+    app.register_blueprint(tag)
 
 
 def register_commands(app: Flask):
-     app.cli.add_command(commands.create_init_user)
+    app.cli.add_command(commands.create_init_user)
+    app.cli.add_command(commands.create_init_tags)
 
 

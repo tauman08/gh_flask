@@ -1,13 +1,27 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ super() }}
-    article detail
+    {{ article_object.title }}
 {% endblock %}
 
 {% block body %}
-<h1>Articles</h1>
-        <h2>{{ article_object['title'] }}</h2>
-        <p>{{article_object['text']}}</p>
-        <p>User: {{name_user}}</p>
+    <div class="row">
+        <h1>{{ article_object.title }}</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-12">{{ article_object.text }}</div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div><small class="text-muted">Author: {{name_user}} </small></div>
+            <div><small class="text-muted">Created at: {{ article_object.created_at.strftime('%d-%m-%Y %H:%M:%S') }}</small></div>
+            <div><small class="text-muted">Updated at: {{ article_object.updated_at.strftime('%d-%m-%Y %H:%M:%S') }}</small></div>
+        </div>
+        <div class="col-6">
+            {% for tag in article_object.tags %}
+                <span class="badge text-bg-primary">{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
+

@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
-from blog.models import Article, Author
+from sqlalchemy.orm import joinedload
+
+from blog.models import Article, Author, Tag
 from blog.forms.article import CreateArticleForm
 from blog.extensions import db
 
@@ -29,8 +31,9 @@ def article_list():
 @article.route('/create', methods=['POST','GET'])
 @login_required
 def create_article():
-    
     form = CreateArticleForm(request.form)
+    form.tags.choices = [(tag.id, tag.name) for tag in Tag.query.order_by('name')]
+
     if request.method == "POST" and form.validate_on_submit():
         _article = Article(title=form.title.data.strip(),text=form.text.data)
         if current_user.author:
@@ -40,6 +43,10 @@ def create_article():
             db.session.add(author)
             db.session.flush()
             _article.author_id = author.id
+        if form.tags.data:
+            selected_tags = Tag.query.filter(Tag.id.in_(form.tags.data))
+            for tag in selected_tags:
+                _article.tags.append(tag)
 
         db.session.add(_article)
         db.session.commit()
@@ -51,7 +58,7 @@ def create_article():
 @article.route('/<int:pk>')
 def get_article(pk: int):
     try:
-        selected_artical = Article.query.filter_by(id=pk).one_or_none()
+        selected_artical: Article = Article.query.filter_by(id=pk).options(joinedload(Article.tags)).one_or_none()
         if not selected_artical:
             raise NotFound(f"Article #{pk} doesn't exist!")
 
