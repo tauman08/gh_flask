@@ -7,7 +7,7 @@ class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     WTF_CSRF_ENABLED = True
-
+    FLASK_ADMIN_SWATCH = 'journal'
 
 class Development(BaseConfig):
     DEBUG = True
