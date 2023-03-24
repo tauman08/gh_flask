@@ -14,3 +14,5 @@ Flask-COMBO-JSONAPI==1.0.7
 ComboJSONAPI==1.1.1
 apispec==4.7.1
 PyYAML==5.4.1
+requests==2.26.0
+MarkupSafe==2.0.1
