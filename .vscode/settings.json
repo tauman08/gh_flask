@@ -1,11 +1,11 @@
 {
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "driver": "SQLite",
-            "name": "flask_db",
-            "database": "${workspaceFolder:gh_flask}/instance/db.sqlite"
-        }
-    ],
-    "sqltools.useNodeRuntime": true
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "flask2",
+      "database": "${workspaceFolder:gh_flask}/instance/db.sqlite"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }
