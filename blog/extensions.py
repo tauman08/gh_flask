@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 from blog.admin.views import CustomAdminIndexView
 
+
 login_manager = LoginManager()
 db = SQLAlchemy()
 migrate = Migrate()
@@ -16,3 +17,4 @@ admin = Admin(
     template_mode='bootstrap4',
 )
 api = Api()
+
